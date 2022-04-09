@@ -51,7 +51,7 @@ fgc = folium.FeatureGroup(name = "Countrys")
 # A state will perform according to the number of its inhabitants as called from the JSON file and defined in the conditions
 fgc.add_child(folium.GeoJson(data = open("world.json" , 'r' , encoding='utf-8-sig').read() ) )
 
-# Add feature grouppppp
+# Add feature group
 map.add_child(fgv)
 map.add_child(fgc)
 

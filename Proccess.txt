@@ -1,0 +1,5 @@
+1. download excel file
+2. make a map
+3. 3 lists - primary / admin / minor
+4. put them on the map with different colors and different text each
+5. add city name and country name to each city in the map

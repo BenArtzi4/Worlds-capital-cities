@@ -1,23 +1,24 @@
-import requests, zipfile, pandas, folium
+import requests
+import zipfile
+import pandas as pd
+import folium
 from io import BytesIO
 
 # Download a zipfile
 url = "https://simplemaps.com/static/data/world-cities/basic/simplemaps_worldcities_basicv1.75.zip"
-filename = url.split('/')[-1]
 req = requests.get(url)
 
-#Extracted files from the downloaded zipfile
-zipfile = zipfile.ZipFile(BytesIO(req.content))
-zipfile.extractall("C:\Downloads")
+# Extract files from the downloaded zipfile
+with zipfile.ZipFile(BytesIO(req.content)) as z:
+    z.extractall(r"C:/Downloads")  # Use raw string for the path
 
-fgv = folium.FeatureGroup(name = "Cities")
+# Initialize FeatureGroup for cities
+fgv = folium.FeatureGroup(name="Cities")
 
-df1 = pandas.read_excel("C:\Downloads\worldcities.xlsx")
+# Load city data
+df1 = pd.read_excel(r"C:/Downloads/worldcities.xlsx")  # Use raw string for the path
 df1 = df1.fillna("0")
-data1 = df1.loc[(df1['capital'] == "primary")]
-
-
-
+data1 = df1[df1['capital'] == "primary"]
 
 latitude = list(data1["lat"])
 longitude = list(data1["lng"])
@@ -28,35 +29,37 @@ city = list(data1["city"])
 html = """<h4>Information:</h4>
 Capital City: %s"""
 
-# A method that determines the color of the popup according to the height of the volcano
-def choosing_color(population):
-    if population < 500000:
+
+# Function to determine marker color based on population
+def choosing_color(city_population):
+    if city_population < 500000:
         return 'green'
-    elif population < 1000000:
+    elif city_population < 1000000:
         return 'orange'
     else:
         return 'red'
 
-# Adding a map and defining its features
-map = folium.Map(location=[47.28, -116.27], zoom_start = 4, tiles="Stamen Terrain")
 
-# The representation of the points of the volcanoes on the map
-for lt ,ln,pl,ct in zip(latitude,longitude,population,city):
+# Create map and add features
+map = folium.Map(location=[47.28, -116.27], zoom_start=4, tiles="Stamen Terrain",
+                 attr="Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.")
+
+# Add markers for capital cities
+for lt, ln, pl, ct in zip(latitude, longitude, population, city):
     iframe = folium.IFrame(html=html % ct, width=200, height=100)
-    fgv.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon = folium.Icon(color = choosing_color(int(pl)) )))
+    fgv.add_child(
+        folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon=folium.Icon(color=choosing_color(int(pl)))))
 
-# Adding a layer of country boundary markers
-fgc = folium.FeatureGroup(name = "Countrys")
+# Add country boundary markers
+fgc = folium.FeatureGroup(name="Countries")
+fgc.add_child(folium.GeoJson(data=open("world.json", 'r', encoding='utf-8-sig').read()))
 
-# A state will perform according to the number of its inhabitants as called from the JSON file and defined in the conditions
-fgc.add_child(folium.GeoJson(data = open("world.json" , 'r' , encoding='utf-8-sig').read() ) )
-
-# Add feature group
+# Add feature groups to map
 map.add_child(fgv)
 map.add_child(fgc)
 
-# Setting a control panel 
+# Add layer control
 map.add_child(folium.LayerControl())
 
-
+# Save map to HTML file
 map.save("Map3.html")

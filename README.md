@@ -1,20 +1,28 @@
 # World Capital Cities Program
 
-Welcome to the **World Capital Cities** program, developed in Python!
+Welcome to the **World Capital Cities** program, created in Python!
 
-## Program Overview
+## Overview
 
-This program generates a map highlighting the capitals of the world's countries, with each capital city color-coded by population size:
+This Python script generates an interactive map displaying the capitals of the world, color-coded by population size. The map is created using Folium and visualizes each capital city with its name and population size.
 
-- **Green**: Capitals with under 50,000 residents
-- **Orange**: Capitals with 50,000 to 100,000 residents
-- **Red**: Capitals with over 100,000 residents
+![image](https://github.com/user-attachments/assets/f1aa05f1-4534-49b1-ab29-8ed03d2949f1)
 
-## How to Use
+## Features
 
-1. **Download** the program files and open them in a Python development environment.
-2. **Run the program** to download a zip file from the internet and extract the Excel file containing global city data.
-3. The program will filter the data to include only capital cities and plot them on a map according to their longitude and latitude.
-4. Capitals will be color-coded based on their population size as specified above.
+- **Color Coding**: Capitals are color-coded based on their population:
+  - **Green**: Under 500,000 residents
+  - **Orange**: 500,000 to 1,000,000 residents
+  - **Red**: Over 1,000,000 residents
 
-Visualize the locations and populations of the world's capital cities with ease!
+## Instructions
+
+1. **Download** the program files from the repository.
+2. **Install Required Libraries**: Ensure you have the following Python libraries installed:
+   - `requests`
+   - `pandas`
+   - `folium`
+   
+   You can install them using pip:
+   ```bash
+   pip install requests pandas folium
